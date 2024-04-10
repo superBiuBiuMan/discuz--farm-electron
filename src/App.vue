@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import Farm from "./view/farm/index.vue";
-
+import Ranch from "./view/ranch/index.vue";
 const activeKey = ref<string>('1');
 
 
@@ -15,7 +15,9 @@ const activeKey = ref<string>('1');
       <a-tab-pane key="1" tab="农场">
         <Farm/>
       </a-tab-pane>
-      <a-tab-pane key="2" tab="牧场" force-render>Content of Tab Pane 2</a-tab-pane>
+      <a-tab-pane key="2" tab="牧场" force-render>
+        <Ranch/>
+      </a-tab-pane>
     </a-tabs>
   </div>
 </template>
