@@ -4,13 +4,22 @@ import BagImg from "@/assets/btnIcons/bag.png";
 import WarehouseImg from "@/assets/btnIcons/warehouse.png";
 import StoreImg from "@/assets/btnIcons/store.png"
 import Setting from "@/assets/btnIcons/setting.png";
+import Login from "@/components/Login/index.vue";
+import { useOperation } from "./method.ts";
+const {
+  loginVisible,
+  setLoginVisible,
+} = useOperation();
+
+
 </script>
 
 <template>
   <div class="operation">
       <a-button class="operation_btns">
         <template #icon><img :src="LoginImg" alt=""/></template>
-        <span class="operation_btns_text">登录</span>
+        <span class="operation_btns_text" @click="setLoginVisible(true)">登录</span>
+        <Login :visible="loginVisible" @close="setLoginVisible(false)"/>
       </a-button>
       <a-button class="operation_btns">
         <template #icon><img :src="BagImg" alt=""/></template>

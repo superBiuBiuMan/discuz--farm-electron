@@ -1,0 +1,71 @@
+import { ref } from "vue";
+import type {LoginInfo} from "@/components/Login/types.ts";
+import request from "@/utils/request.ts";
+import { message } from 'ant-design-vue';
+
+
+
+export const useLogin = (props: any, emits: any) => {
+  //登录信息
+  const formState = ref<LoginInfo>({
+    username: '',
+    password: '',
+    // code:'',
+  })
+  //确认登录
+  const onFinish = (value:LoginInfo) => {
+    request({
+      method:"post",
+      url:"/member.php",
+      headers:{
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      params:{
+        mod: 'logging',
+        action: 'login',
+        loginsubmit: 'yes',
+        infloat: 'yes',
+        lssubmit: 'yes',
+        inajax: 1,
+      },
+      data:{
+        ...value,
+        fastloginfield: 'username',
+        // formhash: 'ba93a787',
+        quickforward: 'yes',
+        handlekey: 'ls',
+      }
+    }).then((res:any) => {
+      const xmlString = res?.data ?? "";
+      // 创建DOMParser对象
+      const parser = new DOMParser();
+      // 解析XML字符串
+      const xmlDoc = parser.parseFromString(xmlString, "text/xml");
+      // 获取根元素
+      const rootElement = xmlDoc.getElementsByTagName("root")[0];
+      // 获取CDTA内容
+      const cdata = rootElement.childNodes[0];
+      // 提取CDTA内容
+      const cdataContent = cdata.nodeValue ?? "";
+      if(!cdataContent.includes("errorhandle_ls")){
+        //登录成功
+        message.success("登录成功");
+        //关闭对话框
+        closeModal();
+      }else{
+        //登录失败
+        message.error(cdataContent);
+      }
+    })
+  }
+
+  //关闭弹窗
+  const closeModal = () => {
+    emits('close', false)
+  }
+  return {
+    closeModal,
+    onFinish,
+    formState,
+  }
+}

@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow,session} from 'electron'
 import path from 'node:path'
 
 // The built directory structure
@@ -26,6 +26,8 @@ function createWindow() {
     center: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
+      //解决跨域
+      webSecurity: false,
     },
   })
 
@@ -43,6 +45,24 @@ function createWindow() {
     // win.loadFile('dist/index.html')
     win.loadFile(path.join(process.env.DIST, 'index.html'))
   }
+
+  //解决set-cookie问题
+  session.defaultSession.webRequest.onHeadersReceived(
+    (details, callback) => {
+      if (
+        details.responseHeaders &&
+        details.responseHeaders['Set-Cookie'] &&
+        details.responseHeaders['Set-Cookie'].length &&
+        !details.responseHeaders['Set-Cookie'][0].includes('SameSite=none')
+      ) {
+        for (let i = 0;i< details.responseHeaders['Set-Cookie'].length; i++) {
+          details.responseHeaders['Set-Cookie'][i] += '; SameSite=None; Secure';
+        }
+      }
+      callback({ cancel: false, responseHeaders: details.responseHeaders });
+    },
+  );
+
 }
 
 // Quit when all windows are closed, except on macOS. There, it's common
