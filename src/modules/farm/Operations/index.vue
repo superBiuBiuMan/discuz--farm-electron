@@ -8,7 +8,6 @@ import Setting from "@/assets/btnIcons/setting.png";
 
 <template>
   <div class="operation">
-    <a-space>
       <a-button class="operation_btns">
         <template #icon><img :src="LoginImg" alt=""/></template>
         <span class="operation_btns_text">登录</span>
@@ -29,19 +28,18 @@ import Setting from "@/assets/btnIcons/setting.png";
         <template #icon><img :src="Setting" alt=""/></template>
         <span class="operation_btns_text">设置</span>
       </a-button>
-    </a-space>
   </div>
 </template>
 
 <style scoped lang="sass">
 .operation
+  display: flex
   &_btns
     display: flex
     align-items: center
-    height: 50px
     img
       width: 40px
       aspect-ratio:  1 /1
     &_text
-      padding-left: 4px
+      padding-left: 10px
 </style>
