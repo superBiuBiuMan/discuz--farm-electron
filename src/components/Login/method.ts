@@ -3,38 +3,43 @@ import type {LoginInfo} from "@/components/Login/types.ts";
 import request from "@/utils/request.ts";
 import { message } from 'ant-design-vue';
 
+import {useUserInfo} from "@/store";
 
 
 export const useLogin = (props: any, emits: any) => {
+  const  { init } = useUserInfo();
+
   //登录信息
   const formState = ref<LoginInfo>({
-    username: '',
-    password: '',
+    username: 'admin',
+    password: '1999825wmq',
     // code:'',
   })
   //确认登录
   const onFinish = (value:LoginInfo) => {
+    const params = {
+      mod: 'logging',
+      action: 'login',
+      loginsubmit: 'yes',
+      infloat: 'yes',
+      lssubmit: 'yes',
+      inajax: 1,
+    }
+    const data = {
+      ...value,
+      fastloginfield: 'username',
+      // formhash: 'ba93a787',
+      quickforward: 'yes',
+      handlekey: 'ls',
+    }
     request({
       method:"post",
       url:"/member.php",
       headers:{
         "Content-Type": "application/x-www-form-urlencoded",
       },
-      params:{
-        mod: 'logging',
-        action: 'login',
-        loginsubmit: 'yes',
-        infloat: 'yes',
-        lssubmit: 'yes',
-        inajax: 1,
-      },
-      data:{
-        ...value,
-        fastloginfield: 'username',
-        // formhash: 'ba93a787',
-        quickforward: 'yes',
-        handlekey: 'ls',
-      }
+      params,
+      data,
     }).then((res:any) => {
       const xmlString = res?.data ?? "";
       // 创建DOMParser对象
@@ -50,6 +55,9 @@ export const useLogin = (props: any, emits: any) => {
       if(!cdataContent.includes("errorhandle_ls")){
         //登录成功
         message.success("登录成功");
+        //初始化桑菊
+        init();
+
         //关闭对话框
         closeModal();
       }else{
