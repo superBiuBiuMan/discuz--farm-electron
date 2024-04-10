@@ -21,8 +21,8 @@ const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
 function createWindow() {
   win = new BrowserWindow({
     icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
-    width:780,
-    height:600,
+    width:800,
+    height:700,
     center: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -35,7 +35,7 @@ function createWindow() {
   })
 
   //默认开启控制台
-  win.webContents.openDevTools();
+  // win.webContents.openDevTools();
 
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL)

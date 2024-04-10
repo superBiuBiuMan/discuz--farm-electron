@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+import "../src/assets/Normalize.css";
 import './style.css'
 import App from './App.vue'
 //antd
