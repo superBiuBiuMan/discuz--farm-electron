@@ -4,7 +4,6 @@ import Farm from "./view/farm/index.vue";
 import Ranch from "./view/ranch/index.vue";
 const activeKey = ref<string>('1');
 
-
 </script>
 
 

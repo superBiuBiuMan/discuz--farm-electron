@@ -1,4 +1,7 @@
+
 import { ipcRenderer, contextBridge } from 'electron'
+
+
 
 // --------- Expose some API to the Renderer process ---------
 contextBridge.exposeInMainWorld('ipcRenderer', {
@@ -18,7 +21,9 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
     const [channel, ...omit] = args
     return ipcRenderer.invoke(channel, ...omit)
   },
-
+  generateCropInfoDB(){
+    return ipcRenderer.invoke("generateCropInfoDB");
+  },
   // You can expose other APTs you need here.
   // ...
 })
