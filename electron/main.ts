@@ -1,5 +1,6 @@
 import { app, BrowserWindow,session} from 'electron'
 import path from 'node:path'
+import "./ipc/index.ts"
 // The built directory structure
 //
 // ├─┬─┬ dist
@@ -29,6 +30,8 @@ function createWindow() {
       webSecurity: false,
     },
   })
+
+
 
   // Test active push message to Renderer-process.
   win.webContents.on('did-finish-load', () => {

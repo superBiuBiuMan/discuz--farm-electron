@@ -24,6 +24,9 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   generateCropInfoDB(){
     return ipcRenderer.invoke("generateCropInfoDB");
   },
+  getInfo(){
+    return ipcRenderer.invoke("getInfo");
+  },
   // You can expose other APTs you need here.
   // ...
 })
