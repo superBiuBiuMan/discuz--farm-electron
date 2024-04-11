@@ -1,6 +1,5 @@
 import { app, BrowserWindow,session} from 'electron'
 import path from 'node:path'
-import "./buildResources/index.ts";
 // The built directory structure
 //
 // ├─┬─┬ dist
