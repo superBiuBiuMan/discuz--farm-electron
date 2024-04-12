@@ -55,9 +55,8 @@ export const useLogin = (props: any, emits: any) => {
       if(!cdataContent.includes("errorhandle_ls")){
         //登录成功
         message.success("登录成功");
-        //初始化桑菊
+        //初始化数据
         init();
-
         //关闭对话框
         closeModal();
       }else{

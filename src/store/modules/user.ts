@@ -13,9 +13,9 @@ export const useUserInfo = defineStore('userInfo',() => {
   //用户信息
   const userInfo = ref<Partial<UserInfo>>({
 
-  })
-  //初始化数据登录后
-  const init = async () => {
+  });
+  //获取农场信息渔场
+  const getCropInfo = async () => {
     const params = {
       mod:'user',
       act:'run'
@@ -26,8 +26,24 @@ export const useUserInfo = defineStore('userInfo',() => {
       uinY:'',
       farmTime: 0
     }
-    let result = await request({ url:Url.user.baseInfo, method:"post", params,data});
+    //获取农场基本信息
+    let result:any = await request({ url:Url.user.baseInfo, method:"post", params,data});
     result = result?.data ?? {};
+    const farmlandStatusOrigin:any[]= result?.farmlandStatus ?? [];//土地作物信息
+    const farmlandStatusAfter = await window.ipcRenderer.invoke("getCorpInfoList",{ list: farmlandStatusOrigin.map(item => item.a)}).catch(() => []);
+    cropInfo.value = farmlandStatusAfter?.map((item:any) => {
+      return {
+        index:item.id,
+        name:item.cName ?? "-",
+        level:item.cLevel ?? "-",
+      }
+    }) ?? [];
+
+    console.log('更新后的',cropInfo.value);
+  }
+  //初始化数据登录后
+  const init = async () => {
+    getCropInfo();
   }
   return {
     cropInfo,

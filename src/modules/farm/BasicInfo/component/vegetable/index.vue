@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {ColumnsType} from "ant-design-vue/lib/table/interface";
-
+import {useUserInfo} from "@/store";
 const columns:ColumnsType = [
   {
     title: '编号',
@@ -26,92 +26,93 @@ const columns:ColumnsType = [
     dataIndex: 'harvestTime',
   },
 ];
-const data = [
-  {
-    index: 1,
-    name: '苹果',
-    level: 1,
-    season: 1,
-    harvestTime: 1
-  },
-  {
-    index: 2,
-    name: '香蕉',
-    level: 1,
-    season: 1,
-    harvestTime: 1
-  },
-  {
-    index: 3,
-    name: '梨',
-    level: 1,
-    season: 1,
-    harvestTime: 1
-  },
-  {
-    index: 4,
-    name: '菠萝',
-    level: 1,
-    season: 1,
-    harvestTime: 1
-  },
-  {
-    index: 5,
-    name: '葡萄',
-    level: 1,
-    season: 1,
-    harvestTime: 1
-  },
-  {
-    index: 6,
-    name: '橘子',
-    level: 1,
-    season: 1,
-    harvestTime: 1
-  },
-  {
-    index: 7,
-    name: '葡萄',
-    level: 1,
-    season: 1,
-    harvestTime: 1
-  },
-  {
-    index: 8,
-    name: '橘子',
-    level: 1,
-    season: 1,
-    harvestTime: 1
-  },
-  {
-    index: 9,
-    name: '葡萄',
-    level: 1,
-    season: 1,
-    harvestTime: 1
-  },
-  {
-    index: 10,
-    name: '橘子',
-    level: 1,
-    season: 1,
-    harvestTime: 1
-  },
-  {
-    index: 11,
-    name: '葡萄',
-    level: 1,
-    season: 1,
-    harvestTime: 1
-  },
-  {
-    index: 12,
-    name: '橘子',
-    level: 1,
-    season: 1,
-    harvestTime: 1
-  },
-]
+// const data = [
+//   {
+//     index: 1,
+//     name: '苹果',
+//     level: 1,
+//     season: 1,
+//     harvestTime: 1
+//   },
+//   {
+//     index: 2,
+//     name: '香蕉',
+//     level: 1,
+//     season: 1,
+//     harvestTime: 1
+//   },
+//   {
+//     index: 3,
+//     name: '梨',
+//     level: 1,
+//     season: 1,
+//     harvestTime: 1
+//   },
+//   {
+//     index: 4,
+//     name: '菠萝',
+//     level: 1,
+//     season: 1,
+//     harvestTime: 1
+//   },
+//   {
+//     index: 5,
+//     name: '葡萄',
+//     level: 1,
+//     season: 1,
+//     harvestTime: 1
+//   },
+//   {
+//     index: 6,
+//     name: '橘子',
+//     level: 1,
+//     season: 1,
+//     harvestTime: 1
+//   },
+//   {
+//     index: 7,
+//     name: '葡萄',
+//     level: 1,
+//     season: 1,
+//     harvestTime: 1
+//   },
+//   {
+//     index: 8,
+//     name: '橘子',
+//     level: 1,
+//     season: 1,
+//     harvestTime: 1
+//   },
+//   {
+//     index: 9,
+//     name: '葡萄',
+//     level: 1,
+//     season: 1,
+//     harvestTime: 1
+//   },
+//   {
+//     index: 10,
+//     name: '橘子',
+//     level: 1,
+//     season: 1,
+//     harvestTime: 1
+//   },
+//   {
+//     index: 11,
+//     name: '葡萄',
+//     level: 1,
+//     season: 1,
+//     harvestTime: 1
+//   },
+//   {
+//     index: 12,
+//     name: '橘子',
+//     level: 1,
+//     season: 1,
+//     harvestTime: 1
+//   },
+// ]
+const userStore = useUserInfo();
 </script>
 
 <template>
@@ -119,7 +120,7 @@ const data = [
   <a-table
       size="small"
       :columns="columns"
-      :data-source="data"
+      :data-source="userStore.cropInfo "
       :pagination="false"
       :scroll="{ y: 194 }"
   />

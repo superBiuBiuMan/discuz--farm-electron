@@ -2,9 +2,10 @@ export interface CropInfo {
   index:number,//编号
   name:string,//作物名称
   level:string | number,//等级
-  season:string | number,//季
-  q:string,
-  r:string,
+  season?:string | number,//季
+  q?:string,
+  r?:string,
+  //土地类型?
 }
 
 //渔场
