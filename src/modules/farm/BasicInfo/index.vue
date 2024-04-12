@@ -80,7 +80,7 @@ import Fish from "./component/fish/fish.vue";
 
 <style scoped lang="sass">
 .info
-  background: aquamarine
+
   &_name
     display: flex
     height: 70px
@@ -103,6 +103,7 @@ import Fish from "./component/fish/fish.vue";
           aspect-ratio: 1 / 1
 
   &_detail
+    height: calc( 100% - 70px )
   :deep(.ant-tabs-nav)
     margin-bottom:0
   :deep(.ant-tabs-tab)

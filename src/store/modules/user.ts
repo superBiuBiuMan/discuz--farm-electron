@@ -30,16 +30,25 @@ export const useUserInfo = defineStore('userInfo',() => {
     let result:any = await request({ url:Url.user.baseInfo, method:"post", params,data});
     result = result?.data ?? {};
     const farmlandStatusOrigin:any[]= result?.farmlandStatus ?? [];//土地作物信息
-    const farmlandStatusAfter = await window.ipcRenderer.invoke("getCorpInfoList",{ list: farmlandStatusOrigin.map(item => item.a)}).catch(() => []);
-    cropInfo.value = farmlandStatusAfter?.map((item:any) => {
-      return {
-        index:item.id,
-        name:item.cName ?? "-",
-        level:item.cLevel ?? "-",
-      }
+    let cropListObj = await window.ipcRenderer.invoke("getCorpInfoList",{ list: farmlandStatusOrigin.map(item => item.a)})
+                      .then((res:any) => {
+                        const temp:any = {};
+                        res.forEach((item:any) => {
+                          temp[item.id] = item;
+                        })
+                        return temp;
+                      })
+                      .catch(() => []);
+    console.log(cropListObj,farmlandStatusOrigin)
+    cropInfo.value = farmlandStatusOrigin.map((item,index) => {
+        const currentInfo = cropListObj[item.a] ?? {};//当前作物信息
+        return {
+          index:index+1,
+          id:currentInfo.id,
+          name:currentInfo.cName ?? "-",
+          level:currentInfo.cLevel ?? "-",
+        }
     }) ?? [];
-
-    console.log('更新后的',cropInfo.value);
   }
   //初始化数据登录后
   const init = async () => {
