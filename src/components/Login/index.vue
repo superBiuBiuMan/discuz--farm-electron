@@ -10,12 +10,11 @@ const {
 } = useLogin(props,emit);
 
 const handleTest = () => {
-  //@ts-ignore
-  window.ipcRenderer.getInfo().then(res => {
+  window.ipcRenderer.invoke("getCorpInfoList",{ list:[1,2,3] }).then((res ) => {
     console.log(res)
   })
-
 }
+
 </script>
 
 <template>
@@ -57,7 +56,6 @@ const handleTest = () => {
         </a-form-item>
         <a-form-item :wrapper-col="{ span: 16, offset: 8 }">
           <a-button type="primary" html-type="submit">登录</a-button>
-          <a-button type="primary" @click="handleTest">测试</a-button>
           <a-button style="margin-left: 10px" @click="closeModal">取消</a-button>
         </a-form-item>
         <!--验证码-->
