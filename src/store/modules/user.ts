@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from "vue";
-import {CropInfo, FishInfo, UserInfo} from "@/store/types/User.ts";
+import {CropInfo, FishInfo, FriendListInfo, UserInfo} from "@/store/types/User.ts";
 import request from "@/utils/request.ts";
 import Url from "@/urls";
 import {getFarmTime, getFarmKey} from "@/utils/secret.ts";
@@ -12,6 +12,8 @@ export const useUserInfo = defineStore('userInfo',() => {
   const fishInfo = ref<FishInfo[]>([]);
   //用户信息
   const userInfo = ref<Partial<UserInfo>>({});
+  //好友列表
+  const friendListInfo = ref<Partial<FriendListInfo>[]>([]);
 
   //获取农场信息
   const getCropInfo = async () => {
@@ -103,15 +105,28 @@ export const useUserInfo = defineStore('userInfo',() => {
 
   }
 
+  //获取用户好友
+  const getFriendList = async () => {
+    const data = {
+      uIdx: 1,
+      farmTime: getFarmTime(),
+      farmKey: getFarmKey(),
+    }
+    //获取好友列表
+    let result:any = await request({ url:Url.user.friendList, method:"post", headers:{ "Content-Type":"application/x-www-form-urlencoded" } ,data});
+    friendListInfo.value = result?.data ?? [];
+  }
   //初始化数据登录后
   const init = async () => {
     await getCropInfo();
     await getFishInfo();
+    await getFriendList();
   }
   return {
     cropInfo,
     fishInfo,
     userInfo,
+    friendListInfo,
     init,
   }
 })
