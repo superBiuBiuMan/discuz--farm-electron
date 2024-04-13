@@ -27,12 +27,11 @@ const columns:ColumnsType = [
       :columns="columns"
       :data-source="userStore.friendListInfo"
       :pagination="false"
-      :scroll="{ y: 310 }"
+      :scroll="{ y: 320 }"
   />
 </div>
 </template>
 
 <style scoped lang="sass">
 .friend
-  background-color: green
 </style>
