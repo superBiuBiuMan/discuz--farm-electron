@@ -7,6 +7,10 @@ export  const useOperation = () => {
   const bagVisible = ref<boolean>(false);
   //仓库是否可见
   const storeVisible = ref<boolean>(false);
+  //设置是否可见
+  const settingVisible = ref<boolean>(false);
+
+
   // 设置登录可见
   const setLoginVisible = (visible: boolean) => {
     loginVisible.value = visible;
@@ -20,11 +24,17 @@ export  const useOperation = () => {
   const setStoreVisible = (visible: boolean) => {
     storeVisible.value = visible;
   }
+  // 设置设置是否可见
+  const setSettingVisible = (visible: boolean) => {
+    settingVisible.value = visible;
+  }
   return {
     loginVisible,
     storeVisible,
     bagVisible,
+    settingVisible,
     setLoginVisible,
+    setSettingVisible,
     setBagVisible,
     setStoreVisible,
   }
