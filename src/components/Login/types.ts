@@ -3,7 +3,7 @@ export interface Props {
   visible: boolean
 }
 export interface Emits {
-  (event: "close"): void
+  (event: "close",data:boolean): void
 }
 
 export interface LoginInfo {

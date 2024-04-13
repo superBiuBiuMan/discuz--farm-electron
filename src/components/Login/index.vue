@@ -9,12 +9,6 @@ const {
   formState,
 } = useLogin(props,emit);
 
-const handleTest = () => {
-  window.ipcRenderer.invoke("getCorpInfoList",{ list:[1,2,3] }).then((res ) => {
-    console.log(res)
-  })
-}
-
 </script>
 
 <template>
