@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {ColumnsType} from "ant-design-vue/lib/table/interface";
-
+import {useUserInfo} from "@/store";
 const columns:ColumnsType = [
   {
     title: '编号',
@@ -16,23 +16,7 @@ const columns:ColumnsType = [
     dataIndex: 'harvestTime',
   },
 ];
-const data = [
-    {
-      index: 1,
-      name: '红鱼',
-      harvestTime: '2021-01-01'
-    },
-    {
-      index: 2,
-      name: '黄鱼',
-      harvestTime: '2021-01-01'
-    },
-    {
-      index: 3,
-      name: '蓝鱼',
-      harvestTime: '2021-01-01'
-    },
-]
+const useInfoStore = useUserInfo();
 </script>
 
 <template>
@@ -40,9 +24,9 @@ const data = [
   <a-table
       size="small"
       :columns="columns"
-      :data-source="data"
+      :data-source="useInfoStore.fishInfo"
       :pagination="false"
-      :scroll="{ y: 194 }"
+      :scroll="{ y: 220 }"
   />
 </div>
 </template>

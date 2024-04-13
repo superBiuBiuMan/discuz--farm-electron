@@ -12,7 +12,7 @@ export interface CropInfo {
 export interface FishInfo {
   index:number,//编号
   name:string,//鱼苗名称
-  time:string | number ,//收获时间
+  time?:string | number ,//收获时间
 }
 
 //用户信息
@@ -26,6 +26,7 @@ export interface UserInfo {
   yuanba:string | number,// 元宝
   dog:string | number,//狗狗
   exp:string | number,//经验
+  yellowLevel:string | number,//黄钻等级
 }
 
 //原始返回
@@ -53,3 +54,4 @@ export interface FarmlandStatus {
   bitmap: number
   goldLand: number
 }
+

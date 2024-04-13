@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import Vegetables from "./component/vegetable/index.vue";
 import Fish from "./component/fish/fish.vue";
+import {useUserInfo} from "@/store";
+import { storeToRefs } from "pinia";
+const { userInfo } = storeToRefs(useUserInfo());
 </script>
 
 <template>
@@ -10,7 +13,7 @@ import Fish from "./component/fish/fish.vue";
     <!--头像和操作-->
     <div class="info_name_right">
       <div class="info_name_right_img">
-        <img src="https://oss.dreamlove.top/i/2024/02/02/nw24wu.png" alt=""/>
+        <img :src="userInfo.avatar" alt=""/>
       </div>
       <div class="info_name_right_operation">
         <a-space>
@@ -24,43 +27,35 @@ import Fish from "./component/fish/fish.vue";
       <a-row>
         <a-col :span="8">
           <label>昵称:</label>
-          <span>超人</span>
+          <span>{{  userInfo.name  }}</span>
         </a-col>
         <a-col :span="8">
           <label>等级:</label>
-          <span>500</span>
+          <span></span>
         </a-col>
         <a-col :span="8">
           <label>金币:</label>
-          <span>5000500</span>
+          <span>{{ userInfo.money }}</span>
         </a-col>
       </a-row>
       <a-row>
         <a-col :span="8">
           <label>积分:</label>
-          <span>5045545</span>
+          <span></span>
         </a-col>
         <a-col :span="8">
           <label>元宝:</label>
-          <span>5000</span>
+          <span>{{ userInfo.yuanba }}</span>
         </a-col>
         <a-col :span="8">
           <label>狗粮:</label>
-          <span>超人</span>
+          <span></span>
         </a-col>
       </a-row>
       <a-row>
         <a-col :span="8">
           <label>狗狗:</label>
-          <span>超人</span>
-        </a-col>
-        <a-col :span="8">
-          <label>等级1:</label>
-          <span>超人</span>
-        </a-col>
-        <a-col :span="8">
-          <label>金币1:</label>
-          <span>超人</span>
+          <span></span>
         </a-col>
       </a-row>
     </div>
@@ -86,11 +81,9 @@ import Fish from "./component/fish/fish.vue";
     height: 70px
     &_left
       width: 75%
-      background-color: red
     &_right
       width: 25%
       height: 100%
-      background-color: green
       display: flex
       flex-direction: column
       align-items: center
