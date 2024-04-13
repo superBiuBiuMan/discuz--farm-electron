@@ -6,6 +6,8 @@ import Url from "@/urls";
 import {getFarmTime, getFarmKey} from "@/utils/secret.ts";
 
 export const useUserInfo = defineStore('userInfo',() => {
+  //服务器时间
+  const serverTime = ref<number>(0);
   //农场作物信息
   const cropInfo = ref<CropInfo[]>([]);
   //渔场信息
@@ -26,6 +28,8 @@ export const useUserInfo = defineStore('userInfo',() => {
     //获取农场基本信息
     let result:any = await request({ url:Url.user.baseInfo, method:"post", data});
     result = result?.data ?? {};
+    //设置服务器时间
+    serverTime.value = result?.serverTime?.time ?? 0;
     //设置用户信息
     setUserInfo(result);
     const farmlandStatusOrigin:any[]= result?.farmlandStatus ?? [];//土地作物信息
@@ -38,15 +42,18 @@ export const useUserInfo = defineStore('userInfo',() => {
                         return temp;
                       })
                       .catch(() => []);
-    console.log(cropListObj,farmlandStatusOrigin);
-    //todo 获取鱼塘信息http://localhost:8888/source/plugin/qqfarm/core/mync.php?mod=cgi_fish_index
     cropInfo.value = farmlandStatusOrigin.map((item,index) => {
         const currentInfo = cropListObj[item.a] ?? {};//当前作物信息
+        const cropGrowList = currentInfo?.cropGrow?.split(",") ?? [];
         return {
           index:index+1,
           id:currentInfo.id,
           name:currentInfo.cName ?? "-",
           level:currentInfo.cLevel ?? "-",
+          r:item.r,
+          q:item.q,
+          isMaturation:item.r && item.q && cropGrowList.length && (item.r - item.q - cropGrowList.at(-2) > 0),
+          harvestTime:item.r && item.q && (item.r - item.q - cropGrowList.at(-2) * -1),
         }
     }) ?? [];
   }
@@ -123,6 +130,7 @@ export const useUserInfo = defineStore('userInfo',() => {
     await getFriendList();
   }
   return {
+    serverTime,
     cropInfo,
     fishInfo,
     userInfo,

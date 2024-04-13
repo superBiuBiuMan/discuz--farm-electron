@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import {ColumnsType} from "ant-design-vue/lib/table/interface";
 import {useUserInfo} from "@/store";
+//@ts-ignore
+import duration from "dayjs/plugin/duration";
+import dayjs from "dayjs"
+dayjs.extend(duration);
 const columns:ColumnsType = [
   {
     title: '编号',
@@ -27,6 +31,7 @@ const columns:ColumnsType = [
   },
 ];
 const userStore = useUserInfo();
+
 </script>
 
 <template>
@@ -37,8 +42,23 @@ const userStore = useUserInfo();
       :columns="columns"
       :data-source="userStore.cropInfo"
       :pagination="false"
-      :scroll="{ y: 220 }"
-  />
+      :scroll="{ y: 220 }">
+    <template #bodyCell="{ column, record }">
+
+      <!--成熟时间-->
+      <template v-if="column.dataIndex === 'harvestTime'">
+        <!--成熟-->
+        <template v-if="record.isMaturation">
+          <a-tag color="orange">已成熟</a-tag>
+        </template>
+        <!--未成熟-->
+        <template v-else>
+          {{ record.harvestTime ? dayjs.duration(record.harvestTime, 'seconds').format('HH:mm:ss') : '-' }}
+        </template>
+      </template>
+
+    </template>
+  </a-table>
 </div>
 </template>
 

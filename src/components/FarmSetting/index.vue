@@ -37,7 +37,7 @@ const {
               label="按等级播种商店种子"
               name="seedPlantMode"
           >
-            <a-input v-model:value="formState.seedPlantMode" />
+            <a-input v-model:value="formState.seedPlantMode" disabled />
           </a-form-item>
           <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
             <a-button type="primary" html-type="submit">保存</a-button>

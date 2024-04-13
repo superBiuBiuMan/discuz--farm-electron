@@ -3,8 +3,10 @@ export interface CropInfo {
   name:string,//作物名称
   level:string | number,//等级
   season?:string | number,//季
-  q?:string,
-  r?:string,
+  q:number,//状态更新时间(秒)
+  r:number ,//播种时间
+  isMaturation?:boolean//是否成熟
+  harvestTime?:number,//成熟倒计时
   //土地类型?
 }
 
