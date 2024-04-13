@@ -4,14 +4,18 @@ import BagImg from "@/assets/btnIcons/bag.png";
 import WarehouseImg from "@/assets/btnIcons/warehouse.png";
 import StoreImg from "@/assets/btnIcons/store.png"
 import Setting from "@/assets/btnIcons/setting.png";
+
 import Login from "@/components/Login/index.vue";
 import FarmBag from "@/components/FarmBag/index.vue";
+import FarmStore from "@/components/FarmStore/inde.vue";
 import { useOperation } from "./method.ts";
 const {
   loginVisible,
+  storeVisible,
   bagVisible,
   setLoginVisible,
   setBagVisible,
+  setStoreVisible,
 } = useOperation();
 
 
@@ -29,9 +33,10 @@ const {
         <span class="operation_btns_text" >背包</span>
         <FarmBag :visible="bagVisible" @close="setBagVisible(false)"/>
       </a-button>
-      <a-button class="operation_btns">
+      <a-button class="operation_btns" @click="setStoreVisible(true)">
         <template #icon><img :src="WarehouseImg" alt=""/></template>
         <span class="operation_btns_text">仓库</span>
+        <FarmStore :visible="storeVisible" @close="setStoreVisible(false)"/>
       </a-button>
       <a-button class="operation_btns">
         <template #icon><img :src="StoreImg" alt=""/></template>
