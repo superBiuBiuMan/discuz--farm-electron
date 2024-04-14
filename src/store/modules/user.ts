@@ -4,7 +4,7 @@ import {CropInfo, FishInfo, FriendListInfo, UserInfo} from "@/store/types/User.t
 import request from "@/utils/request.ts";
 import Url from "@/urls";
 import {getFarmTime, getFarmKey} from "@/utils/secret.ts";
-import {harvestAllCrop} from "@/utils/commonReq.ts";
+import {harvestAllCrop, plantCrop, witherDigCrop} from "@/utils/commonReq.ts";
 export const computedTime = (time:number,cropInfo:any,serverTime:number) => {
   return  cropInfo.growthCycle + time - serverTime;
 }
@@ -26,6 +26,31 @@ export default defineStore('userInfo',() => {
   const userInfo = ref<Partial<UserInfo>>({});
   //好友列表
   const friendListInfo = ref<Partial<FriendListInfo>[]>([]);
+
+  //播种空地
+  const plantEmptyLand = () => {
+    cropInfo.value.map(item => {
+      if(!item.id){
+        //播种
+        plantCrop(item.index + "","933");
+      }else{
+        if(item.isMaturation && !item.isWithered){
+          //作物收获
+          harvestAllCrop(item.index + "").then(() => {
+            witherDigCrop(item.index + "");//铲除
+            plantCrop(item.index + "","933");//播种
+          })
+        }else{
+          if(item.isWithered){
+            witherDigCrop(item.index + "");//如果是枯萎的,铲除
+            plantCrop(item.index + "","933");//播种
+          }
+        }
+      }
+    })
+    //重新查询数据
+    getCropInfo();
+  }
 
   //获取农场信息
   const getCropInfo = async () => {
@@ -69,6 +94,11 @@ export default defineStore('userInfo',() => {
           isWithered:item.b === CropStatusEnum.Withered,
         }
     }) ?? [];
+    if(cropInfo.value.some(item => !item.id || item.isWithered || item.isMaturation)){
+      //播种空地和收获作物
+      plantEmptyLand();
+    }
+    console.log('作物信息',cropInfo.value)
   }
 
   //获取渔场信息
@@ -144,14 +174,22 @@ export default defineStore('userInfo',() => {
   //每一秒动态更新数据种子数据
   const startWatch = () => {
     if(timer.value) clearInterval(timer.value);
-
     //创建计时器
     cropInfo.value.forEach(item => {
       if(!item.isMaturation  && item.harvestTime && item.harvestTime >0){
         setTimeout(() => {
           console.log('收获作物',item);
           //倒计时,执行收获作物操作
-          harvestAllCrop(item.index + "");
+          harvestAllCrop(item.index + "").then((status) => {
+            if(status === CropStatusEnum.Withered){
+              //枯萎状态,铲除并重新播种
+              witherDigCrop(item.index + "").then(() => {
+                //播种
+                plantCrop(item.index + "","933");
+              })
+            }
+          })
+
           //重新查询土地信息
           getCropInfo();
         },item.harvestTime * 1000)

@@ -44,7 +44,6 @@ const columns:ColumnsType = [
       <!--编号-->
       <template v-if="column.dataIndex === 'season'">
         {{ record.id ? record.season : "-" }}
-        {{record.harvestTime}}
       </template>
       <!--成熟时间-->
       <template v-if="column.dataIndex === 'harvestTime'">
