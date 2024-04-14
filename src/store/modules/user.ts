@@ -74,7 +74,11 @@ export const useUserInfo = defineStore('userInfo',() => {
     //获取农场基本信息
     let result:any = await request({ url:Url.user.fishInfo, method:"post", headers:{ "Content-Type":"application/x-www-form-urlencoded" } ,data});
     result = result?.data ?? {};
-    const {  fish,open } = result;
+    let {  fish,open } = result;
+    //判断是否是数组
+    if(!Array.isArray(fish)){
+      fish = Object.values(fish);
+    }
     if(open === 0){
       //todo 用户未开通鱼塘
     }else{
