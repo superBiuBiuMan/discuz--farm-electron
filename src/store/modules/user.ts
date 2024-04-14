@@ -132,11 +132,26 @@ export const useUserInfo = defineStore('userInfo',() => {
     let result:any = await request({ url:Url.user.friendList, method:"post", headers:{ "Content-Type":"application/x-www-form-urlencoded" } ,data});
     friendListInfo.value = result?.data ?? [];
   }
+
+  //每一秒动态更新数据种子数据
+  const startWatch = () => {
+    setInterval(() => {
+      cropInfo.value = cropInfo.value.map(item => {
+        const time = --item.harvestTime;
+        return {
+          ...item,
+          isMaturation:time < 0 ,
+          harvestTime:time,
+        }
+      })
+    },1000)
+  }
   //初始化数据登录后
   const init = async () => {
     await getCropInfo();
     await getFishInfo();
     await getFriendList();
+    startWatch();
   }
   return {
     serverTime,

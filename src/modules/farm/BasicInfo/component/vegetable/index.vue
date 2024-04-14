@@ -1,11 +1,7 @@
 <script setup lang="ts">
 import {ColumnsType} from "ant-design-vue/lib/table/interface";
 import {useUserInfo} from "@/store";
-//@ts-ignore
-import duration from "dayjs/plugin/duration";
-import dayjs from "dayjs"
 import {formatSeconds} from "@/utils/secret.ts";
-dayjs.extend(duration);
 const columns:ColumnsType = [
   {
     title: '编号',
@@ -50,12 +46,10 @@ const userStore = useUserInfo();
       <template v-if="column.dataIndex === 'harvestTime'">
         <!--成熟-->
         <template v-if="record.isMaturation">
-          {{ record.harvestTime }}
           <a-tag color="orange">已成熟</a-tag>
         </template>
         <!--未成熟-->
         <template v-else>
-          {{ record.harvestTime }}
          {{ record.harvestTime ? formatSeconds(record.harvestTime) : '-' }}
         </template>
       </template>
