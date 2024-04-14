@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {ColumnsType} from "ant-design-vue/lib/table/interface";
-import {useUserInfo} from "@/store";
-const userStore = useUserInfo();
+import {userInfoStore} from "@/store";
 const columns:ColumnsType = [
   // {
   //   title: '等级',
@@ -25,7 +24,7 @@ const columns:ColumnsType = [
   <a-table
       size="small"
       :columns="columns"
-      :data-source="userStore.friendListInfo"
+      :data-source="userInfoStore.friendListInfo"
       :pagination="false"
       :scroll="{ y: 320 }"
   />

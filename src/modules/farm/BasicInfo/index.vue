@@ -2,9 +2,9 @@
 import Vegetables from "./component/vegetable/index.vue";
 import Fish from "./component/fish/fish.vue";
 import { useBasicInfo } from "./method.ts";
-import {useUserInfo} from "@/store";
+import {userInfoStore} from "@/store";
 import { storeToRefs } from "pinia";
-const { userInfo } = storeToRefs(useUserInfo());
+const { userInfo } = storeToRefs(userInfoStore);
 const {
   refresh
 } = useBasicInfo();

@@ -1,9 +1,8 @@
 import {onMounted, ref} from "vue";
-import {useSetting} from "@/store";
+import {settingStore} from "@/store";
 import {SeedPlantMode} from "@/store/types/Setting.ts";
 //@ts-ignore
 export const useFarmSetting = (props:any,emit:any) => {
-  const settingStore = useSetting();
   onMounted(() => {
     formState.value.seedPlantMode = settingStore.setting.seedPlantMode;
   })

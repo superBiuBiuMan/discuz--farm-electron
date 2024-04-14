@@ -1,5 +1,7 @@
 // @ts-ignore
 import { MD5 } from "crypto-js"
+
+
 /**
  * 获取farmKey
  */
@@ -41,3 +43,4 @@ export function formatSeconds(seconds: number): string {
   // 返回格式化后的时分秒字符串
   return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
 }
+

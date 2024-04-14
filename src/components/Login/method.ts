@@ -3,12 +3,10 @@ import type {LoginInfo} from "@/components/Login/types.ts";
 import request from "@/utils/request.ts";
 import { message } from 'ant-design-vue';
 
-import {useUserInfo} from "@/store";
+import {userInfoStore} from "@/store";
 
 
 export const useLogin = (props: any, emits: any) => {
-  const  { init } = useUserInfo();
-
   //登录信息
   const formState = ref<LoginInfo>({
     username: 'admin',
@@ -56,7 +54,7 @@ export const useLogin = (props: any, emits: any) => {
         //登录成功
         message.success("登录成功");
         //初始化数据
-        init();
+        userInfoStore.init();
         //关闭对话框
         closeModal();
       }else{

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref } from "vue";
+import {nextTick, ref} from "vue";
 import {CropInfo, FishInfo, FriendListInfo, UserInfo} from "@/store/types/User.ts";
 import request from "@/utils/request.ts";
 import Url from "@/urls";
@@ -9,7 +9,9 @@ export const computedTime = (time:number,cropInfo:any,serverTime:number) => {
   return  cropInfo.growthCycle + time - serverTime;
 }
 
-export const useUserInfo = defineStore('userInfo',() => {
+export default defineStore('userInfo',() => {
+  //计时器
+  const timer = ref<any>(null);
   //服务器时间
   const serverTime = ref<number>(0);
   //农场作物信息
@@ -32,6 +34,7 @@ export const useUserInfo = defineStore('userInfo',() => {
     //获取农场基本信息
     let result:any = await request({ url:Url.user.baseInfo, method:"post", data});
     result = result?.data ?? {};
+    console.log('基本信息',result)
     //设置服务器时间
     serverTime.value = result?.serverTime?.time ?? 0;
     //设置用户信息
@@ -66,10 +69,10 @@ export const useUserInfo = defineStore('userInfo',() => {
   //获取渔场信息
   const getFishInfo = async () => {
     const data = {
-      uIdx: 1,
+      uIdx: userInfo.value.uId,
       farmTime: getFarmTime(),
       farmKey: getFarmKey(),
-      ownerId: 1,
+      ownerId: userInfo.value.uId,
     }
     //获取农场基本信息
     let result:any = await request({ url:Url.user.fishInfo, method:"post", headers:{ "Content-Type":"application/x-www-form-urlencoded" } ,data});
@@ -106,7 +109,7 @@ export const useUserInfo = defineStore('userInfo',() => {
   const setUserInfo = (userInfoOrigin:any) => {
     const { exp,user } = userInfoOrigin || {};
     const info = {
-      id:user.uId,
+      uId:user.uId,
       name:user?.userName ?? "-",//昵称
       avatar:user?.headPic ?? "",//头像
       // level:string | number,//等级
@@ -135,7 +138,21 @@ export const useUserInfo = defineStore('userInfo',() => {
 
   //每一秒动态更新数据种子数据
   const startWatch = () => {
-    setInterval(() => {
+    if(timer.value) clearInterval(timer.value);
+
+    //创建计时器
+    cropInfo.value.forEach(item => {
+      if(!item.isMaturation && item.harvestTime && item.harvestTime >0){
+        setTimeout(() => {
+          //倒计时,执行收获作物操作
+
+
+        },item.harvestTime)
+      }
+    })
+
+    //每一秒动态更新收获数据
+    timer.value = setInterval(() => {
       cropInfo.value = cropInfo.value.map(item => {
         const time = --item.harvestTime;
         return {
@@ -144,14 +161,16 @@ export const useUserInfo = defineStore('userInfo',() => {
           harvestTime:time,
         }
       })
-    },1000)
+    },1100)
   }
   //初始化数据登录后
   const init = async () => {
     await getCropInfo();
     await getFishInfo();
     await getFriendList();
-    startWatch();
+    nextTick(() => {
+      startWatch();
+    })
   }
   return {
     serverTime,

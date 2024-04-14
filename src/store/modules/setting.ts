@@ -3,7 +3,7 @@ import {reactive, ref} from "vue";
 import {SeedPlantMode} from "@/store/types/Setting.ts";
 
 
-export const useSetting = defineStore('setting',() => {
+export default defineStore('setting',() => {
   const setting = reactive({
     seedPlantMode:SeedPlantMode.LEVEL,//播种模式
   });

@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import {ColumnsType} from "ant-design-vue/lib/table/interface";
-import {ref, onMounted, watchEffect, watch} from "vue";
+import {ref, watch} from "vue";
 import request from "@/utils/request.ts";
 import Url from "@/urls";
 import {getFarmKey, getFarmTime} from "@/utils/secret.ts";
+import {userInfoStore} from "@/store";
+
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 export interface Props {
@@ -88,7 +90,7 @@ const dataInfo = ref({
 })
 const initData = async () => {
   const data = {
-    uIdx: 1,
+    uIdx: userStore.userInfo.uId,
     farmTime: getFarmTime(),
     farmKey: getFarmKey(),
   }

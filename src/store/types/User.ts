@@ -1,4 +1,5 @@
 export interface CropInfo {
+  id:number,//种子id
   index:number,//编号
   name:string,//作物名称
   level:string | number,//等级
@@ -19,7 +20,7 @@ export interface FishInfo {
 
 //用户信息
 export interface UserInfo {
-  id:string,
+  uId:string,
   name:string,//昵称
   avatar:string,//头像
   level:string | number,//等级

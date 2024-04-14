@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {ColumnsType} from "ant-design-vue/lib/table/interface";
-import {useUserInfo} from "@/store";
+import {userInfoStore} from "@/store";
 import {formatSeconds} from "@/utils/secret.ts";
 const columns:ColumnsType = [
   {
@@ -27,7 +27,6 @@ const columns:ColumnsType = [
     dataIndex: 'harvestTime',
   },
 ];
-const userStore = useUserInfo();
 
 </script>
 
@@ -37,11 +36,15 @@ const userStore = useUserInfo();
   <a-table
       size="small"
       :columns="columns"
-      :data-source="userStore.cropInfo"
+      :data-source="userInfoStore.cropInfo"
       :pagination="false"
       :scroll="{ y: 220 }">
     <template #bodyCell="{ column, record }">
 
+      <!--编号-->
+      <template v-if="column.dataIndex === 'season'">
+        {{ record.id ? record.season : "-" }}
+      </template>
       <!--成熟时间-->
       <template v-if="column.dataIndex === 'harvestTime'">
         <!--成熟-->

@@ -1,5 +1,12 @@
 import { createPinia } from "pinia";
-export * from "./modules/user.ts";
-export * from "./modules/setting.ts";
+import UserInfoStore from "./modules/user.ts";
+import SettingStore from "./modules/setting.ts";
 const piniaStore = createPinia();
+
+export const userInfoStore = UserInfoStore(piniaStore);
+export const settingStore = SettingStore(piniaStore);
+
 export default piniaStore;
+
+
+
