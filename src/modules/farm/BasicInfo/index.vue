@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import Vegetables from "./component/vegetable/index.vue";
 import Fish from "./component/fish/fish.vue";
+import { useBasicInfo } from "./method.ts";
 import {useUserInfo} from "@/store";
 import { storeToRefs } from "pinia";
 const { userInfo } = storeToRefs(useUserInfo());
+const {
+  refresh
+} = useBasicInfo();
 </script>
 
 <template>
@@ -18,7 +22,7 @@ const { userInfo } = storeToRefs(useUserInfo());
       <div class="info_name_right_operation">
         <a-space>
           <a-button size="small" type="link">农场</a-button>
-          <a-button size="small" type="link">刷新</a-button>
+          <a-button size="small" type="link" @click="refresh">刷新</a-button>
         </a-space>
       </div>
     </div>

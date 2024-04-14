@@ -48,23 +48,23 @@ export interface FriendListInfo {
 //原始返回
 export interface FarmlandStatus {
   a: number //作物ID
-  b: number
+  b: number //成长状态
   c: number
   d: number
   e: number
-  f: number
-  g: number
+  f: number //杂草
+  g: number //虫子
   h: number
   i: number
-  j: number
-  k: number
-  l: number
-  m: number
-  n: Array< any >
+  j: number //当前季度(0代表第一季,1代表第二季,2代表第三季,3代表第四季,以此类推)
+  k: number //产量
+  l: number //最少剩余
+  m: number //剩余
+  n: Array< any > // 偷窃信息
   o: number
-  p: Array< any >
-  q: number
-  r: number
+  p: Array< any > //灾害信息
+  q: number //种植时间1 (第一季的时候,取这个作为种植时间)??  注释可能有误
+  r: number //种植时间2 (当j>0的时候,也就是第二季或以上的时候,取这个作为种植时间) ?? 注释可能有误
   bitma: number
   pId: number
   bitmap: number

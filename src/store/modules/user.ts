@@ -5,6 +5,10 @@ import request from "@/utils/request.ts";
 import Url from "@/urls";
 import {getFarmTime, getFarmKey} from "@/utils/secret.ts";
 
+export const computedTime = (time:number,cropInfo:any,serverTime:number) => {
+  return  cropInfo.growthCycle + time - serverTime;
+}
+
 export const useUserInfo = defineStore('userInfo',() => {
   //服务器时间
   const serverTime = ref<number>(0);
@@ -44,7 +48,7 @@ export const useUserInfo = defineStore('userInfo',() => {
                       .catch(() => []);
     cropInfo.value = farmlandStatusOrigin.map((item,index) => {
         const currentInfo = cropListObj[item.a] ?? {};//当前作物信息
-        const cropGrowList = currentInfo?.cropGrow?.split(",") ?? [];
+        const harvestTime = computedTime(item.q,currentInfo,result?.serverTime?.time);
         return {
           index:index+1,
           id:currentInfo.id,
@@ -52,8 +56,9 @@ export const useUserInfo = defineStore('userInfo',() => {
           level:currentInfo.cLevel ?? "-",
           r:item.r,
           q:item.q,
-          isMaturation:item.r && item.q && cropGrowList.length && (item.r - item.q - cropGrowList.at(-2) > 0),
-          harvestTime:item.r && item.q && (item.r - item.q - cropGrowList.at(-2) * -1),
+          season:item.j+1,
+          harvestTime,
+          isMaturation:item.r && item.q  && harvestTime < 0,
         }
     }) ?? [];
   }
