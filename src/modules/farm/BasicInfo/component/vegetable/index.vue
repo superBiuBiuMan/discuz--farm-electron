@@ -44,12 +44,14 @@ const columns:ColumnsType = [
       <!--编号-->
       <template v-if="column.dataIndex === 'season'">
         {{ record.id ? record.season : "-" }}
+        {{record.harvestTime}}
       </template>
       <!--成熟时间-->
       <template v-if="column.dataIndex === 'harvestTime'">
         <!--成熟-->
         <template v-if="record.isMaturation">
-          <a-tag color="orange">已成熟</a-tag>
+          <a-tag v-if="record.isWithered">已枯萎</a-tag>
+          <a-tag v-else color="orange">已成熟</a-tag>
         </template>
         <!--未成熟-->
         <template v-else>

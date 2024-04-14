@@ -4,9 +4,13 @@ import {CropInfo, FishInfo, FriendListInfo, UserInfo} from "@/store/types/User.t
 import request from "@/utils/request.ts";
 import Url from "@/urls";
 import {getFarmTime, getFarmKey} from "@/utils/secret.ts";
-
+import {harvestAllCrop} from "@/utils/commonReq.ts";
 export const computedTime = (time:number,cropInfo:any,serverTime:number) => {
   return  cropInfo.growthCycle + time - serverTime;
+}
+
+export enum CropStatusEnum {
+  Withered=7,//已枯萎
 }
 
 export default defineStore('userInfo',() => {
@@ -53,7 +57,7 @@ export default defineStore('userInfo',() => {
         const currentInfo = cropListObj[item.a] ?? {};//当前作物信息
         const harvestTime = computedTime(item.q,currentInfo,result?.serverTime?.time);
         return {
-          index:index+1,
+          index:index,
           id:currentInfo.id,
           name:currentInfo.cName ?? "-",
           level:currentInfo.cLevel ?? "-",
@@ -62,6 +66,7 @@ export default defineStore('userInfo',() => {
           season:item.j+1,
           harvestTime,
           isMaturation:item.r && item.q  && harvestTime < 0,
+          isWithered:item.b === CropStatusEnum.Withered,
         }
     }) ?? [];
   }
@@ -97,7 +102,7 @@ export default defineStore('userInfo',() => {
       fishInfo.value = fish.map((item:any,index:number) => {
         const currentInfo = fishList[item.fid] ?? {};//当前作物信息
         return {
-          index:index+1,
+          index:index,
           id:currentInfo.id,
           name:currentInfo.crop_name ?? "-",
         }
@@ -127,7 +132,7 @@ export default defineStore('userInfo',() => {
   //获取用户好友
   const getFriendList = async () => {
     const data = {
-      uIdx: 1,
+      uIdx: userInfo.value.uId,
       farmTime: getFarmTime(),
       farmKey: getFarmKey(),
     }
@@ -142,12 +147,14 @@ export default defineStore('userInfo',() => {
 
     //创建计时器
     cropInfo.value.forEach(item => {
-      if(!item.isMaturation && item.harvestTime && item.harvestTime >0){
+      if(!item.isMaturation  && item.harvestTime && item.harvestTime >0){
         setTimeout(() => {
+          console.log('收获作物',item);
           //倒计时,执行收获作物操作
-
-
-        },item.harvestTime)
+          harvestAllCrop(item.index + "");
+          //重新查询土地信息
+          getCropInfo();
+        },item.harvestTime * 1000)
       }
     })
 

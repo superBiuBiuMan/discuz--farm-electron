@@ -1,13 +1,14 @@
 export interface CropInfo {
   id:number,//种子id
-  index:number,//编号
+  index:number,//编号(土地编号)
   name:string,//作物名称
   level:string | number,//等级
   season?:string | number,//季
-  q:number,//状态更新时间(秒)
-  r:number ,//播种时间
+  q:number,//状态更新时间(秒) ??
+  r:number ,//播种时间 ??
   isMaturation:boolean//是否成熟
   harvestTime:number,//成熟倒计时
+  isWithered:boolean//是否枯萎
   //土地类型?
 }
 

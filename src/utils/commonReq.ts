@@ -1,17 +1,17 @@
 //普遍要用到的操作
 import request from "@/utils/request.ts";
 import Url from "@/urls";
-import {getFarmTime} from "@/utils/secret.ts";
+import {getReqInfo} from "@/utils/reqDataParam.ts";
+import {userInfoStore} from "@/store";
 //收获所有作物
-export const harvestAllCrop = () => {
+export const harvestAllCrop = (land:string) => {
+  const data1 = getReqInfo(["uIdx", "farmTime", "farmKey"]);
   const data = {
-    tName: 'admin',
-    ownerId: 1,
-    farmTime: getFarmTime(),
-    place: 0,
-    farmKey: '6348b1d283a9618dda9feaf01059aa5c',
-    fName: 'admin',
-    uIdx: 1,
+    ...data1,
+    tName: userInfoStore.userInfo.name,
+    ownerId: userInfoStore.userInfo.uId,
+    place: land,//收获的土地0~23
+    fName: userInfoStore.userInfo.name,
   }
   request({ url:Url.harvest.farmHarvestAll, method:"post", data,headers:{ "Content-Type":"application/x-www-form-urlencoded"} })
 }
