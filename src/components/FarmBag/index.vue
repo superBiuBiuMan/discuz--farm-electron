@@ -3,8 +3,7 @@ import {ColumnsType} from "ant-design-vue/lib/table/interface";
 import {ref, watch} from "vue";
 import request from "@/utils/request.ts";
 import Url from "@/urls";
-import {getFarmKey, getFarmTime} from "@/utils/secret.ts";
-import {userInfoStore} from "@/store";
+import {getReqInfo} from "@/utils/reqDataParam.ts";
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
@@ -89,11 +88,7 @@ const dataInfo = ref({
   goodsList:[],
 })
 const initData = async () => {
-  const data = {
-    uIdx: userStore.userInfo.uId,
-    farmTime: getFarmTime(),
-    farmKey: getFarmKey(),
-  }
+  const data = getReqInfo(["uIdx","farmTime","farmKey"]);
   let result:any = await request({ url:Url.bag.getFarmBag, method:"post", headers:{ "Content-Type":"application/x-www-form-urlencoded" } ,data});
   result = result?.data ?? [];
   dataInfo.value.cropList = result?.filter((item:any) => item.type === 1) ?? [];//种子

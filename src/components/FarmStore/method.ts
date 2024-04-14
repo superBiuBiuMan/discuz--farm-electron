@@ -74,14 +74,13 @@ export const useFarmStore = (props:any,emit:any) => {
   //获取蔬果数据
   const getHarvestDataList = async () => {
     const data = getReqInfo(['uIdx', 'farmTime', 'farmKey']);
-    // const data = {};
     let result:any = await request({ url:Url.bag.getFarmStore, method:"post", headers:{ "Content-Type":"application/x-www-form-urlencoded" } ,data});
     harvestDataList.value = result?.data?.crop ?? [];
   }
   //获取种子数据
   const getSeedDataList = async () => {
-    // const data = getReqInfo(['uIdx', 'farmTime', 'farmKey']);
-    const data = {};
+    const data = getReqInfo(['uIdx', 'farmTime', 'farmKey']);
+    // const data = {};
     let result:any = await request({ url:Url.bag.getFarmStoreSeed, method:"post", headers:{ "Content-Type":"application/x-www-form-urlencoded" } ,data});
     seedDataList.value = result?.data ?? [];
   }
