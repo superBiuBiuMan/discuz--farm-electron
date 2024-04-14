@@ -2,7 +2,10 @@ import axios from "axios";
 import {message} from "ant-design-vue";
 
 const service = axios.create({
-  baseURL:"http://127.0.0.1:8888",
+  // baseURL:"http://farm.dreamlove.top",
+  // baseURL:"http://127.0.0.1:8888",
+  withCredentials:true,
+  baseURL:"api",
   // baseURL: process.env.VUE_APP_BASE_API,
   // baseURL: process.env.VUE_APP_BASE_API,
 })
