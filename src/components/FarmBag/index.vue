@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import {ColumnsType} from "ant-design-vue/lib/table/interface";
-import {ref, watch} from "vue";
-import request from "@/utils/request.ts";
-import Url from "@/urls";
-import {getReqInfo} from "@/utils/reqDataParam.ts";
-
+import {userInfoStore} from "@/store";
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 export interface Props {
@@ -82,25 +78,6 @@ const goodsColumns:ColumnsType = [
     dataIndex:"depict",
   }
 ]
-const dataInfo = ref({
-  cropList:[],
-  fishList:[],
-  goodsList:[],
-})
-const initData = async () => {
-  const data = getReqInfo(["uIdx","farmTime","farmKey"]);
-  let result:any = await request({ url:Url.bag.getFarmBag, method:"post", headers:{ "Content-Type":"application/x-www-form-urlencoded" } ,data});
-  result = result?.data ?? [];
-  dataInfo.value.cropList = result?.filter((item:any) => item.type === 1) ?? [];//种子
-  dataInfo.value.fishList = result?.filter((item:any) => item.type === 23) ?? [];//鱼苗
-  dataInfo.value.goodsList = result?.filter((item:any) => item.type === 10) ?? [];//道具
-}
-watch(props,() => {
-  if(props.visible){
-    //加载数据
-    initData();
-  }
-})
 </script>
 
 <template>
@@ -117,7 +94,7 @@ watch(props,() => {
         <a-table
             size="small"
             :columns="cropColumns"
-            :data-source="dataInfo.cropList"
+            :data-source="userInfoStore.userBagInfo.cropList"
             :pagination="false"
             :scroll="{ y: 250 }"
         />
@@ -126,7 +103,7 @@ watch(props,() => {
         <a-table
             size="small"
             :columns="fishColumns"
-            :data-source="dataInfo.fishList"
+            :data-source="userInfoStore.userBagInfo.fishList"
             :pagination="false"
         />
       </a-tab-pane>
@@ -134,7 +111,7 @@ watch(props,() => {
         <a-table
             size="small"
             :columns="goodsColumns"
-            :data-source="dataInfo.goodsList"
+            :data-source="userInfoStore.userBagInfo.goodsList"
             :pagination="false"
         />
       </a-tab-pane>

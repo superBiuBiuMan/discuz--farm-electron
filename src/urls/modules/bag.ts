@@ -6,3 +6,4 @@ export const getFarmStore = "/source/plugin/qqfarm/core/mync.php?mod=cgi_farm_ge
 
 //农场仓库-种子
 export const getFarmStoreSeed = "/source/plugin/qqfarm/core/mync.php?mod=cgi_farm_seed_list";
+

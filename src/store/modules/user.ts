@@ -5,6 +5,7 @@ import request from "@/utils/request.ts";
 import Url from "@/urls";
 import {getFarmTime, getFarmKey} from "@/utils/secret.ts";
 import {harvestAllCrop, plantCrop, witherDigCrop} from "@/utils/commonReq.ts";
+import {getReqInfo} from "@/utils/reqDataParam.ts";
 export const computedTime = (time:number,cropInfo:any,serverTime:number) => {
   return  cropInfo.growthCycle + time - serverTime;
 }
@@ -22,36 +23,53 @@ export default defineStore('userInfo',() => {
   const cropInfo = ref<CropInfo[]>([]);
   //渔场信息
   const fishInfo = ref<FishInfo[]>([]);
-  //用户信息
+  //用户基本信息
   const userInfo = ref<Partial<UserInfo>>({});
   //好友列表
   const friendListInfo = ref<Partial<FriendListInfo>[]>([]);
-
+  //用户背包信息
+  const userBagInfo = ref({
+    cropList:[],//种子
+    fishList:[],//鱼苗
+    goodsList:[],//道具
+  });
+  //获取商店信息
+  //获取背包信息
+  const getUserBagInfo = async () => {
+    const data = getReqInfo(["uIdx","farmTime","farmKey"]);
+    let result:any = await request({ url:Url.bag.getFarmBag, method:"post", headers:{ "Content-Type":"application/x-www-form-urlencoded" } ,data});
+    result = result?.data ?? [];
+    userBagInfo.value.cropList = result?.filter((item:any) => item.type === 1) ?? [];//种子
+    userBagInfo.value.fishList = result?.filter((item:any) => item.type === 23) ?? [];//鱼苗
+    userBagInfo.value.goodsList = result?.filter((item:any) => item.type === 10) ?? [];//道具
+  }
   //播种空地
-  const plantEmptyLand = () => {
-    cropInfo.value.map(item => {
+  const plantEmptyLand = async () => {
+    cropInfo.value.map(async (item) => {
       if(!item.id){
         //播种
-        plantCrop(item.index + "","933");
-      }else{
+        console.log('播种',item);
+        await plantCrop(item.index + "","933");
+      }
+      else{
         if(item.isMaturation && !item.isWithered){
+          console.log('作物已经成熟',item);
           //作物收获
-          harvestAllCrop(item.index + "").then(() => {
-            witherDigCrop(item.index + "");//铲除
-            plantCrop(item.index + "","933");//播种
-          })
+          await harvestAllCrop(item.index + "");
+          await witherDigCrop(item.index + "");//铲除
+          await plantCrop(item.index + "","933");//播种
         }else{
           if(item.isWithered){
-            witherDigCrop(item.index + "");//如果是枯萎的,铲除
-            plantCrop(item.index + "","933");//播种
+            await witherDigCrop(item.index + "");//如果是枯萎的,铲除
+            await plantCrop(item.index + "","933");//播种
           }
         }
       }
     })
     //重新查询数据
-    getCropInfo();
+    await getCropInfo();
   }
-
+  let bbbb = true;
   //获取农场信息
   const getCropInfo = async () => {
     const data = {
@@ -90,13 +108,16 @@ export default defineStore('userInfo',() => {
           q:item.q,
           season:item.j+1,
           harvestTime,
-          isMaturation:item.r && item.q  && harvestTime < 0,
+          // isMaturation:(item.r && item.q && harvestTime < 0 ? true : false),
+          isMaturation:(!!(item.r && item.q && harvestTime < 0)),
           isWithered:item.b === CropStatusEnum.Withered,
         }
     }) ?? [];
-    if(cropInfo.value.some(item => !item.id || item.isWithered || item.isMaturation)){
+    if(bbbb === true && cropInfo.value.some(item => !item.id || item.isWithered || item.isMaturation)){
       //播种空地和收获作物
+      console.log('播种空地和收获作物',cropInfo.value)
       plantEmptyLand();
+      bbbb = false;
     }
     console.log('作物信息',cropInfo.value)
   }
@@ -180,16 +201,15 @@ export default defineStore('userInfo',() => {
         setTimeout(() => {
           console.log('收获作物',item);
           //倒计时,执行收获作物操作
-          harvestAllCrop(item.index + "").then((status) => {
-            if(status === CropStatusEnum.Withered){
-              //枯萎状态,铲除并重新播种
-              witherDigCrop(item.index + "").then(() => {
-                //播种
-                plantCrop(item.index + "","933");
-              })
-            }
-          })
-
+          // harvestAllCrop(item.index + "").then((status) => {
+          //   if(status === CropStatusEnum.Withered){
+          //     //枯萎状态,铲除并重新播种
+          //     witherDigCrop(item.index + "").then(() => {
+          //       //播种
+          //       plantCrop(item.index + "","933");
+          //     })
+          //   }
+          // })
           //重新查询土地信息
           getCropInfo();
         },item.harvestTime * 1000)
@@ -210,6 +230,7 @@ export default defineStore('userInfo',() => {
   }
   //初始化数据登录后
   const init = async () => {
+    await getUserBagInfo();
     await getCropInfo();
     await getFishInfo();
     await getFriendList();
@@ -223,6 +244,7 @@ export default defineStore('userInfo',() => {
     fishInfo,
     userInfo,
     friendListInfo,
+    userBagInfo,
     init,
   }
 })

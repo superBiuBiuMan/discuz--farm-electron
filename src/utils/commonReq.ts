@@ -30,6 +30,7 @@ export const harvestAllCrop = (place:string) => {
  * @param cId 播种作物id
  */
 export const plantCrop = (place:string,cId:string) => {
+    //todo 查找是否有这个种子,没有就购买
     const data1 = getReqInfo(["uIdx", "farmTime", "farmKey"]);
     const data = {
       ...data1,

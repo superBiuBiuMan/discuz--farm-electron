@@ -5,18 +5,18 @@ import vue from '@vitejs/plugin-vue'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  server:{
-    port:8273,
-    proxy:{
-      "/api":{
-        target:"http://farm.dreamlove.top",
-        changeOrigin:true,
-        rewrite(path) {
-          return path.replace(/^\/api/, '')
-        },
-      }
-    }
-  },
+  // server:{
+  //   port:8276,
+  //   proxy:{
+  //     "/api":{
+  //       target:"http://localhost:8889/",
+  //       changeOrigin:true,
+  //       rewrite(path) {
+  //         return path.replace(/^\/api/, '')
+  //       },
+  //     }
+  //   }
+  // },
   //设置别名
   resolve: {
     alias: {
