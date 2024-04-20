@@ -110,7 +110,7 @@ export default defineStore('userInfo',() => {
       cropInfo.value.map(async (item) => {
         if(!item.id){
           //播种
-          await plantCrop(item.index,'933');
+          await plantCrop(item.index,'185');
         }
         else{
           if(item.isMaturation && !item.isWithered){
@@ -121,7 +121,7 @@ export default defineStore('userInfo',() => {
             //枯萎并播种
             if(item.isWithered){
               await witherDigCrop(item.index + "");//如果是枯萎的,铲除
-              await plantCrop(item.index + "","933");//播种
+              await plantCrop(item.index + "","185");//播种
             }
           }
         }
