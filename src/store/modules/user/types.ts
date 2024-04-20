@@ -73,3 +73,9 @@ export interface FarmlandStatus {
   goldLand: number
 }
 
+//用户背包
+export interface UserFarmBagInfo {
+  cropList: any[];
+  fishList: any[];
+  goodsList: any[];
+}

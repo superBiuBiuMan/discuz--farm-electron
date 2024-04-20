@@ -1,6 +1,6 @@
 import {onMounted, ref} from "vue";
 import {settingStore} from "@/store";
-import {SeedPlantMode} from "@/store/types/Setting.ts";
+import {SeedPlantMode} from "@/store/modules/setting/types.ts";
 //@ts-ignore
 export const useFarmSetting = (props:any,emit:any) => {
   onMounted(() => {

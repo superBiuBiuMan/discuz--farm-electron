@@ -4,6 +4,14 @@ import Url from "@/urls";
 import {getReqInfo} from "@/utils/reqDataParam.ts";
 import {userInfoStore} from "@/store";
 
+//作物处理状态
+export enum CorpApplyTypeEnum {
+  //播种
+  Plant = 1,
+  //收获
+  Harvest = 2
+}
+
 /**
  * 收获作物
  * @param place 土地编号,如果需要批量,逗号分割,eg:0,1,2,3

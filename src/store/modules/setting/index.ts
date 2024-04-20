@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import {reactive} from "vue";
-import {SeedPlantMode} from "@/store/types/Setting.ts";
+import {SeedPlantMode} from "@/store/modules/setting/types.ts";
 
 
 export default defineStore('setting',() => {
