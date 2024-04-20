@@ -2,7 +2,7 @@ import {getReqInfo} from "@/utils/reqDataParam.ts";
 import request from "@/utils/request.ts";
 import Url from "@/urls";
 import {getFarmKey, getFarmTime} from "@/utils/secret.ts";
-import {FishInfo, FriendListInfo, UserFarmBagInfo} from "@/store/modules/user/types.ts";
+import {FishInfo, FriendListInfo, UserFarmBagInfo,UserFarmShoppingInfo} from "../user/types.ts";
 import {harvestAllCrop, plantCrop, witherDigCrop} from "@/utils/commonReq.ts";
 export type NumString = string | number;
 export enum CropStatusEnum {
@@ -64,7 +64,7 @@ export const getFarmFishInfo = async (uId:NumString):Promise<FishInfo[]> => {
   }
 }
 
-//获取用户好友
+//获取农场用户好友
 export const getFriendList = async (uId:NumString):Promise<FriendListInfo[]> => {
   const data = {
     uIdx: uId,
@@ -76,3 +76,43 @@ export const getFriendList = async (uId:NumString):Promise<FriendListInfo[]> => 
   return result?.data ?? [];
 }
 
+
+//获取农场商店
+export const getFarmShopping = async ():Promise<UserFarmShoppingInfo> => {
+  const data = getReqInfo(["uIdx","farmTime","farmKey"]);
+  let result:any = await request({ url:Url.shopping.getFarmStore, method:"post", headers:{ "Content-Type":"application/x-www-form-urlencoded" } ,data});
+
+  const organicList = []//有机种子
+  const normalList = [];//普通种子
+  const redList = [];//红土地种子
+  const blackList = [];//黑土地种子
+  const vipList = [];//vip种子
+
+  result?.data?.forEach(item => {
+    if(item.isRed === 1){
+      //红土地种子
+      redList.push(item);
+    }
+    else if(item.isYouji === 1){
+      //有机种子
+      organicList.push(item);
+    }
+    else if(item.isRed === 2){
+      //黑土地
+      blackList.push(item);
+    }else if(item.isVip === 1 || item.isvip === 1){
+      //vip种子
+      vipList.push(item);
+    }else{
+      //普通种子
+      normalList.push(item);
+    }
+  })
+  return {
+    organicList,
+    normalList,
+    redList,
+    blackList,
+    vipList
+  }
+}

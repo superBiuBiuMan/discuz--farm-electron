@@ -79,3 +79,30 @@ export interface UserFarmBagInfo {
   fishList: any[];
   goodsList: any[];
 }
+
+export interface CropShoppingInfo {
+  cId: number //作物ID
+  cLevel: number //作物等级
+  cName: string //作物名称
+  cType: number
+  cropExp: number //作物经验
+  expect: number //预计收获
+  growthCycle: number //成长周期(秒)
+  isFlower: number //是否是花卉类型
+  maturingTime: number //多少季作物
+  output: number //产量
+  price: number //种子价格
+  sale: number //单个售价
+  isYouji?:number,//1为有机种子
+  isRed?:number,//1为红土地 2为黑土地
+  isVip:number,//1为vip种子
+  isvip:number,//1为vip种子
+}
+//用户农场商店
+export interface UserFarmShoppingInfo {
+  organicSeeds: CropShoppingInfo[] //有机种子
+  normalSeeds: CropShoppingInfo[] //普通种子
+  redSeeds: CropShoppingInfo[] //红土地种子
+  blackSeeds: CropShoppingInfo[] //黑土地种子
+  vipSeeds: CropShoppingInfo[] //vip种子
+}

@@ -1,12 +1,20 @@
 import {defineStore} from 'pinia'
-import {nextTick, ref} from "vue";
-import {CropInfo, FishInfo, FriendListInfo, UserFarmBagInfo, UserInfo} from "./types.ts";
+import {computed, nextTick, ref} from "vue";
+import {
+  CropInfo,
+  CropShoppingInfo,
+  FishInfo,
+  FriendListInfo,
+  UserFarmBagInfo,
+  UserFarmShoppingInfo,
+  UserInfo
+} from "./types.ts";
 import request from "@/utils/request.ts";
 import Url from "@/urls";
 import {getFarmKey} from "@/utils/secret.ts";
 import {CorpApplyTypeEnum, harvestAllCrop, plantCrop, witherDigCrop} from "@/utils/commonReq.ts";
 
-import {computedTime, CropStatusEnum, getFarmFishInfo, getFriendList, getUserFarmBagInfo,} from "./methods.ts";
+import {computedTime, CropStatusEnum, getFarmFishInfo, getFriendList, getUserFarmBagInfo,getFarmShopping} from "./methods.ts";
 
 
 export default defineStore('userInfo',() => {
@@ -39,6 +47,19 @@ export default defineStore('userInfo',() => {
     fishList:[],//鱼苗
     goodsList:[],//道具
   });
+  //用户农场商店
+  const userFarmShoppingInfo = ref<UserFarmShoppingInfo>({
+    organicSeeds:[],//有机种子
+    normalSeeds:[],//普通种子
+    redSeeds:[],//红土地种子
+    blackSeeds:[],//黑土地种子
+    vipSeeds:[],//vip种子
+  });
+  //最佳播种数据
+  // const bestPlantInfo = ref<CropShoppingInfo>({});
+  // const bestPlantInfo = computed<CropShoppingInfo>(() => {
+  //   return
+  // })
   //获取农场信息
   const getCropInfo = async () => {
     const data = {
@@ -156,12 +177,24 @@ export default defineStore('userInfo',() => {
   }
   //初始化数据登录后
   const init = async () => {
+    //获取用户背包
     const res = await getUserFarmBagInfo();
     userBagInfo.value.cropList = res.cropList;
     userBagInfo.value.fishList = res.fishList;
     userBagInfo.value.goodsList = res.goodsList;
+    //获取商店(便于播种)
+    const shoppInfo = await getFarmShopping();
+    userFarmShoppingInfo.value.normalSeeds = shoppInfo.normalList;
+    userFarmShoppingInfo.value.organicSeeds = shoppInfo.organicList;
+    userFarmShoppingInfo.value.vipSeeds = shoppInfo.vipList;
+    userFarmShoppingInfo.value.blackSeeds = shoppInfo.blackList;
+    userFarmShoppingInfo.value.redSeeds = shoppInfo.redList;
+    console.log('shoppInfo信息',shoppInfo);
+    //土地处理
     await getCropInfo();
+    //鱼塘信息
     fishInfo.value = await getFarmFishInfo(userInfo.value.uId);
+    //好友信息
     friendListInfo.value = await getFriendList(userInfo.value.uId);
     nextTick(() => {
       startWatch();
