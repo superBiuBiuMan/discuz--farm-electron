@@ -82,11 +82,11 @@ export const getFarmShopping = async ():Promise<UserFarmShoppingInfo> => {
   const data = getReqInfo(["uIdx","farmTime","farmKey"]);
   let result:any = await request({ url:Url.shopping.getFarmStore, method:"post", headers:{ "Content-Type":"application/x-www-form-urlencoded" } ,data});
 
-  const organicList = []//有机种子
-  const normalList = [];//普通种子
-  const redList = [];//红土地种子
-  const blackList = [];//黑土地种子
-  const vipList = [];//vip种子
+  const organicList:any[] = []//有机种子
+  const normalList:any[] = [];//普通种子
+  const redList:any[] = [];//红土地种子
+  const blackList:any[] = [];//黑土地种子
+  const vipList:any[] = [];//vip种子
 
   result?.data?.forEach(item => {
     if(item.isRed === 1){

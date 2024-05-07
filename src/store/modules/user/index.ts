@@ -1,8 +1,7 @@
 import {defineStore} from 'pinia'
-import {computed, nextTick, ref} from "vue";
+import { nextTick, ref} from "vue";
 import {
   CropInfo,
-  CropShoppingInfo,
   FishInfo,
   FriendListInfo,
   UserFarmBagInfo,
@@ -12,7 +11,8 @@ import {
 import request from "@/utils/request.ts";
 import Url from "@/urls";
 import {getFarmKey} from "@/utils/secret.ts";
-import {CorpApplyTypeEnum, harvestAllCrop, plantCrop, witherDigCrop} from "@/utils/commonReq.ts";
+import { sleep } from "@/utils/common.ts";
+import {harvestAllCrop, plantCrop, witherDigCrop} from "@/utils/commonReq.ts";
 
 import {computedTime, CropStatusEnum, getFarmFishInfo, getFriendList, getUserFarmBagInfo,getFarmShopping} from "./methods.ts";
 
@@ -55,11 +55,6 @@ export default defineStore('userInfo',() => {
     blackSeeds:[],//黑土地种子
     vipSeeds:[],//vip种子
   });
-  //最佳播种数据
-  // const bestPlantInfo = ref<CropShoppingInfo>({});
-  // const bestPlantInfo = computed<CropShoppingInfo>(() => {
-  //   return
-  // })
   //获取农场信息
   const getCropInfo = async () => {
     const data = {
@@ -98,9 +93,8 @@ export default defineStore('userInfo',() => {
           q:item.q,
           season:item.j+1,
           harvestTime,
-          // isMaturation:(item.r && item.q && harvestTime < 0 ? true : false),
-          isMaturation:(!!(item.r && item.q && harvestTime < 0)),
-          isWithered:item.b === CropStatusEnum.Withered,
+          isMaturation:(!!(item.r && item.q && harvestTime < 0)),//是否成熟
+          isWithered:item.b === CropStatusEnum.Withered,//是否枯萎
         }
     }) ?? [];
     console.log('作物信息',cropInfo.value)
@@ -110,27 +104,33 @@ export default defineStore('userInfo',() => {
       cropInfo.value.map(async (item) => {
         if(!item.id){
           //播种
-          await plantCrop(item.index,'185');
+          await plantCrop(item.index + "",'6085');
+          await sleep(300);
         }
         else{
           if(item.isMaturation && !item.isWithered){
-            console.log('作物已经成熟',item);
+            console.log('作物已经成熟',item,item.index);
             //作物收获
-            await harvestAllCrop(item.index);
+            await harvestAllCrop(item.index + "");
+            await sleep(300);
           }else{
             //枯萎并播种
             if(item.isWithered){
+              console.log('作物已经枯萎',item,item.index);
               await witherDigCrop(item.index + "");//如果是枯萎的,铲除
-              await plantCrop(item.index + "","185");//播种
+              await sleep(300);
+              await plantCrop(item.index + "","6085");//播种
+              await sleep(300);
             }
           }
         }
-      })
+      });
+      await sleep(2000);
       await getCropInfo();
     }
   }
 
-  //应用用户数据
+  //用户数据
   const setUserInfo = (userInfoOrigin:any) => {
     const { exp,user } = userInfoOrigin || {};
     const info = {
@@ -148,6 +148,7 @@ export default defineStore('userInfo',() => {
     userInfo.value = info;
   }
 
+
   //每一秒动态更新数据种子数据
   const startWatch = () => {
     if(timer.value) clearInterval(timer.value);
@@ -158,8 +159,8 @@ export default defineStore('userInfo',() => {
           console.log('倒计时结束-收获作物',item);
           //倒计时,执行收获作物操作
           getCropInfo();
-          //添加长一点的延迟
-        },item.harvestTime * 1000 + 2000)
+          //添加长一点的延迟(10秒)
+        },item.harvestTime * 10000)
       }
     })
 
@@ -184,11 +185,11 @@ export default defineStore('userInfo',() => {
     userBagInfo.value.goodsList = res.goodsList;
     //获取商店(便于播种)
     const shoppInfo = await getFarmShopping();
-    userFarmShoppingInfo.value.normalSeeds = shoppInfo.normalList;
-    userFarmShoppingInfo.value.organicSeeds = shoppInfo.organicList;
-    userFarmShoppingInfo.value.vipSeeds = shoppInfo.vipList;
-    userFarmShoppingInfo.value.blackSeeds = shoppInfo.blackList;
-    userFarmShoppingInfo.value.redSeeds = shoppInfo.redList;
+    userFarmShoppingInfo.value.normalSeeds = shoppInfo.normalSeeds;
+    userFarmShoppingInfo.value.organicSeeds = shoppInfo.organicSeeds;
+    userFarmShoppingInfo.value.vipSeeds = shoppInfo.vipSeeds;
+    userFarmShoppingInfo.value.blackSeeds = shoppInfo.blackSeeds;
+    userFarmShoppingInfo.value.redSeeds = shoppInfo.redSeeds;
     console.log('shoppInfo信息',shoppInfo);
     //土地处理
     await getCropInfo();
