@@ -2,7 +2,7 @@ import {getReqInfo} from "@/utils/reqDataParam.ts";
 import request from "@/utils/request.ts";
 import Url from "@/urls";
 import {getFarmKey, getFarmTime} from "@/utils/secret.ts";
-import {FishInfo, FriendListInfo, UserFarmBagInfo,UserFarmShoppingInfo} from "../user/types.ts";
+import {FarmBagType, FishInfo, FriendListInfo, UserFarmBagInfo, UserFarmShoppingInfo} from "../user/types.ts";
 import {harvestAllCrop, plantCrop, witherDigCrop} from "@/utils/commonReq.ts";
 export type NumString = string | number;
 export enum CropStatusEnum {
@@ -17,9 +17,9 @@ export const getUserFarmBagInfo = async ():Promise<UserFarmBagInfo> => {
   let result:any = await request({ url:Url.bag.getFarmBag, method:"post", headers:{ "Content-Type":"application/x-www-form-urlencoded" } ,data});
   result = result?.data ?? [];
   return {
-    cropList:result?.filter((item:any) => item.type === 1) ?? [],//种子
-    fishList:result?.filter((item:any) => item.type === 23) ?? [],//鱼苗
-    goodsList:result?.filter((item:any) => item.type === 10) ?? [],//道具
+    cropList:result?.filter((item:any) => item.type === FarmBagType.seed) ?? [],
+    fishList:result?.filter((item:any) => item.type === FarmBagType.fish) ?? [],
+    goodsList:result?.filter((item:any) => item.type === FarmBagType.tool) ?? [],
   }
 }
 

@@ -106,3 +106,9 @@ export interface UserFarmShoppingInfo {
   blackSeeds: CropShoppingInfo[] //黑土地种子
   vipSeeds: CropShoppingInfo[] //vip种子
 }
+
+export enum FarmBagType {
+  seed=1,//种子
+  fish=23,//鱼苗
+  tool=10,//道具
+}
